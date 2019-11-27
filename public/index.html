@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <!-- update the version number as needed -->
+    <script  src="/__/firebase/7.5.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script  src="/__/firebase/7.5.0/firebase-auth.js"></script>
+    <script  src="/__/firebase/7.5.0/firebase-database.js"></script>
+    <script  src="/__/firebase/7.5.0/firebase-messaging.js"></script>
+    <script  src="/__/firebase/7.5.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script  src="/__/firebase/init.js"></script>
+
+   
+  </head>
+  <body>
+  		Enter a new Fact 
+		<input type="text" name="" id="fact">
+		<input type="button" value="Insert" onclick="addFact()">
+		<br>
+		Name <input type="text"  id="name">
+		Age <input type="text"  id="age">
+		<input type="button" value="new Person" onclick="addPerson()">
+    <script>
+    	//refer to the database
+    	const dbRef = firebase.database().ref();
+    	function addPerson(){
+    		var nameValue = $('#name').val();
+    		var ageValue = $('#age').val();
+    		var allPersonRef = dbRef.child('allPerson');
+    		var newPerson = allPersonRef.push();
+    		newPerson.set({
+    			name : nameValue,
+    			age  : ageValue
+    		})
+    		alert('insert person done');
+
+    	}
+     	function addFact(){
+     		//get value from textbox fact
+     		var factValue = $('#fact').val();
+     		//refer to the node facts in db
+     		var factsRef = dbRef.child('facts');
+     		//create a new child fact under facts
+     		var newFact = factsRef.push();
+     		//set the value fact of new node
+     		newFact.set({
+     			fact : factValue
+
+     		})
+     		alert('Done!');
+     	}
+    </script>
+  </body>
+</html>
