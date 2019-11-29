@@ -25,9 +25,25 @@
 		Name <input type="text"  id="name">
 		Age <input type="text"  id="age">
 		<input type="button" value="new Person" onclick="addPerson()">
+		 <h1>All Persons</h1>
+		 <ul id="listPersons">
+
+		 </ul>
     <script>
     	//refer to the database
     	const dbRef = firebase.database().ref();
+		dbRef.child('allPerson').on('value',snap=>{
+			fillList(snap);
+		})
+		function fillList(snap){
+			$('#listPersons').empty();
+			snap.forEach(snapChild => {
+				var name = snapChild.child('name').val();
+        		var personKey = snapChild.key;
+				$('#listPersons').append('<li>' +name + '</li>');
+			});
+		}
+
     	function addPerson(){
     		var nameValue = $('#name').val();
     		var ageValue = $('#age').val();
