@@ -40,8 +40,16 @@
 			snap.forEach(snapChild => {
 				var name = snapChild.child('name').val();
         		var personKey = snapChild.key;
-				$('#listPersons').append('<li>' +name + '</li>');
+				var hr = '<a href="#" onclick="remove(this)" key="' + personKey + '">'
+						+ name + '</a>';
+				$('#listPersons').append('<li>' +hr + '</li>');
 			});
+		}
+		function remove(e){
+			var key = e.getAttribute('key');
+			alert('you are going to remove ' + key);
+			var nodeToRemove = dbRef.child('allPerson').child(key);
+      		nodeToRemove.remove();
 		}
 
     	function addPerson(){
