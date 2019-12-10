@@ -24,9 +24,24 @@
           <input type="text" name="" id="job">
           <br>
           <input type="button" value="Insert" onclick="insertPerson()">
+          
+          <ul id="listPersons">
+
+          </ul>
         <script>
             //chi den goc database
             const dbRef = firebase.database().ref();
+            dbRef.child('persons').on('value',snap=>{
+                fillData(snap);
+            });
+            function fillData(snap){
+                $('#listPersons').empty();
+                snap.forEach(snapChild => {
+                    let name = snapChild.child('name').val();
+        		    let personKey = snapChild.key;
+                    $('#listPersons').append(`<li>${name}</li>`);
+                });
+            }
             function insertPerson(){
                 //lay du lieu tu textbox
                 var nameValue = $('#name').val();
