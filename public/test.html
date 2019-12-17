@@ -38,8 +38,9 @@
                 $('#listPersons').empty();
                 snap.forEach(snapChild => {
                     let name = snapChild.child('name').val();
+                    let job = snapChild.child('job').val();
         		    let personKey = snapChild.key;
-                    $('#listPersons').append(`<li>${name}</li>`);
+                    $('#listPersons').append(`<li>${name} - ${job}</li>`);
                 });
             }
             function insertPerson(){
