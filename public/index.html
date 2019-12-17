@@ -1,83 +1,104 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-	<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
-    <!-- update the version number as needed -->
-    <script  src="/__/firebase/7.5.0/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script  src="/__/firebase/7.5.0/firebase-auth.js"></script>
-    <script  src="/__/firebase/7.5.0/firebase-database.js"></script>
-    <script  src="/__/firebase/7.5.0/firebase-messaging.js"></script>
-    <script  src="/__/firebase/7.5.0/firebase-storage.js"></script>
-    <!-- initialize the SDK after all desired features are loaded -->
-    <script  src="/__/firebase/init.js"></script>
 
-   
-  </head>
-  <body>
-  		Enter a new Fact 
-		<input type="text" name="" id="fact">
-		<input type="button" value="Insert" onclick="addFact()">
-		<br>
-		Name <input type="text"  id="name">
-		Age <input type="text"  id="age">
-		<input type="button" value="new Person" onclick="addPerson()">
-		 <h1>All Persons</h1>
-		 <ul id="listPersons">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Welcome to Firebase Hosting</title>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"
+		integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+	<!-- update the version number as needed -->
+	<script src="/__/firebase/7.5.0/firebase-app.js"></script>
+	<!-- include only the Firebase features as you need -->
+	<script src="/__/firebase/7.5.0/firebase-auth.js"></script>
+	<script src="/__/firebase/7.5.0/firebase-database.js"></script>
+	<script src="/__/firebase/7.5.0/firebase-messaging.js"></script>
+	<script src="/__/firebase/7.5.0/firebase-storage.js"></script>
+	<!-- initialize the SDK after all desired features are loaded -->
+	<script src="/__/firebase/init.js"></script>
 
-		 </ul>
-    <script>
-    	//refer to the database
-    	const dbRef = firebase.database().ref();
-		dbRef.child('allPerson').on('value',snap=>{
+
+</head>
+
+<body>
+	<p id="status"></p>
+	Enter a new Fact
+	<input type="text" name="" id="fact">
+	<input type="button" value="Insert" onclick="addFact()">
+	<br>
+	Name <input type="text" id="name">
+	Age <input type="text" id="age">
+	<input type="button" value="new Person" onclick="addPerson()">
+	<h1>All Persons</h1>
+	<ul id="listPersons">
+
+	</ul>
+	<script>
+		$(document).ready(() => {
+			checkLoggedIn();
+		})
+		function checkLoggedIn() {
+			firebase.auth().onAuthStateChanged(function (user) {
+				if (user) {
+					var user = firebase.auth().currentUser;
+					name = user.displayName;
+  					email = user.email;
+					$('#status').html(`you have logged in as ${name} and ${email}`);
+				} else {
+					$('#status').html('you have NOT logged in');
+				}
+			});
+		}
+
+		//refer to the database
+		const dbRef = firebase.database().ref();
+		dbRef.child('allPerson').on('value', snap => {
 			fillList(snap);
 		})
-		function fillList(snap){
+		function fillList(snap) {
 			$('#listPersons').empty();
 			snap.forEach(snapChild => {
 				var name = snapChild.child('name').val();
-        		var personKey = snapChild.key;
+				var personKey = snapChild.key;
 				var hr = '<a href="#" onclick="remove(this)" key="' + personKey + '">'
-						+ name + '</a>';
-				$('#listPersons').append('<li>' +hr + '</li>');
+					+ name + '</a>';
+				$('#listPersons').append('<li>' + hr + '</li>');
 			});
 		}
-		function remove(e){
+		function remove(e) {
 			var key = e.getAttribute('key');
 			alert('you are going to remove ' + key);
 			var nodeToRemove = dbRef.child('allPerson').child(key);
-      		nodeToRemove.remove();
+			nodeToRemove.remove();
 		}
 
-    	function addPerson(){
-    		var nameValue = $('#name').val();
-    		var ageValue = $('#age').val();
-    		var allPersonRef = dbRef.child('allPerson');
-    		var newPerson = allPersonRef.push();
-    		newPerson.set({
-    			name : nameValue,
-    			age  : ageValue
-    		})
-    		alert('insert person done');
+		function addPerson() {
+			var nameValue = $('#name').val();
+			var ageValue = $('#age').val();
+			var allPersonRef = dbRef.child('allPerson');
+			var newPerson = allPersonRef.push();
+			newPerson.set({
+				name: nameValue,
+				age: ageValue
+			})
+			alert('insert person done');
 
-    	}
-     	function addFact(){
-     		//get value from textbox fact
-     		var factValue = $('#fact').val();
-     		//refer to the node facts in db
-     		var factsRef = dbRef.child('facts');
-     		//create a new child fact under facts
-     		var newFact = factsRef.push();
-     		//set the value fact of new node
-     		newFact.set({
-     			fact : factValue
+		}
+		function addFact() {
+			//get value from textbox fact
+			var factValue = $('#fact').val();
+			//refer to the node facts in db
+			var factsRef = dbRef.child('facts');
+			//create a new child fact under facts
+			var newFact = factsRef.push();
+			//set the value fact of new node
+			newFact.set({
+				fact: factValue
 
-     		})
-     		alert('Done!');
-     	}
-    </script>
-  </body>
+			})
+			alert('Done!');
+		}
+	</script>
+</body>
+
 </html>
