@@ -44,6 +44,11 @@
 					name = user.displayName;
   					email = user.email;
 					$('#status').html(`you have logged in as ${name} and ${email}`);
+					user.getIdTokenResult(true).then((idTokenResult) => {
+						if (!!idTokenResult.claims.admin) {
+							$('#status').append(" You are an Admin");
+						}
+					})
 				} else {
 					$('#status').html('you have NOT logged in');
 				}
