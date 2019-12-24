@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>true facts</title>
+</head>
+<body>
+	<ul>
+		{{#each facts}}
+			<li><a href="/editFact/{{key}}">{{text}}</a></li>
+		{{/each}}
+		<a href="/newFact">New Fact</a>
+	</ul>
+</body> 
+</html>
